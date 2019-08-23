@@ -12,22 +12,22 @@ if [ $x -ge 1 -a $x -le 32 -a $a -ge 0 -a $a -le 255 -a $b -ge 0 -a $b -le 255 -
 	while [ $A -gt 8 ]
 	do 
 	A=$(expr $A - 8 )
-	occ=$(expr $occ - 1 )
+	occ=$(expr $occ - 1 ) #xac dinh octet nao bi thay doi, octet nao giu nguyen, octet nao bat dau tu 0->255
 	done
-	if [ $occ -eq 1 ]; then
-		y=$(printf '%08d' $(echo "obase=2; $a" | bc))
-		y=${y:0:-$A}
+	if [ $occ -eq 1 ]; then #octet 1 bi thay doi, 2 3 4 tu 0-> 255
+		y=$(printf '%08d' $(echo "obase=2; $a" | bc)) #hien thi octet bi thay doi duoi dang nhi phan
+		y=${y:0:-$A} #tim so bit bi thay doi o octet do
 		y_zero=$y
 		y_one=$y
 			for((i=0;i<$A;i++))
 			do
-				y_zero=$y_zero"0"
-				y_one=$y_one"1"
+				y_zero=$y_zero"0" #tim phan bi thay doi roi sua thanh 0000
+				y_one=$y_one"1" #tim phan bi thay doi thanh 1111
 			done
-		y1="$(echo "$((2#$y_zero))")"
+		y1="$(echo "$((2#$y_zero))")" #doi lai thanh thap phan
 		y2="$(echo "$((2#$y_one))")"
-		echo "$y1.0.0.0 -> $y2.255.255.255"
-	elif [ $occ -eq 2 ]; then
+		echo "$y1.0.0.0 -> $y2.255.255.255" #hien thi lai dia chi
+	elif [ $occ -eq 2 ]; then #octet 1 giu nguyen, 2 thay doi, 3 4 tu 0-> 255
 		y=$(printf '%08d' $(echo "obase=2; $b" | bc))
 		y=${y:0:-$A}
 		y_zero=$y
